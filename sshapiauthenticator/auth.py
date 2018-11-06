@@ -49,6 +49,8 @@ class SSHAPIAuthenticator(Authenticator):
                 e = web.HTTPError(507,reason="Insufficient Storage")
                 e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
                 raise e
+                return 1
+            else return 0
 
     @gen.coroutine
     def authenticate(self, handler, data):
@@ -81,5 +83,7 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            self.check_quota(username)
-            return username
+            if self.check_quota(username):
+                return None
+            else:
+                return username
