@@ -50,7 +50,8 @@ class SSHAPIAuthenticator(Authenticator):
                 e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
                 raise e
                 return 1
-            else return 0
+            else:
+                return 0
 
     @gen.coroutine
     def authenticate(self, handler, data):
