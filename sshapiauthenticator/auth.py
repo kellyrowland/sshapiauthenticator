@@ -5,7 +5,7 @@ from tornado import gen, web
 import requests
 import json
 from subprocess import check_output, call
-import asyncio, asyncssh
+import shlex
 
 
 from jupyterhub.auth import Authenticator
@@ -51,7 +51,7 @@ class SSHAPIAuthenticator(Authenticator):
     #         return result.exit_status
 
     @gen.coroutine
-    async def authenticate(self, handler, data):
+    def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
         if login is successful.
 
@@ -81,10 +81,10 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            remote_host = 'cori19.nersc.gov'
-            async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
-                result = await conn.run("myquota -c")
-            if result.exit_status:
+            command = "ssh {user}@cori19.nersc.gov 'myquota -c'".format(user=username)
+            command = shlex.split(command)
+            result = subprocess.call(command)
+            if result:
                 e = web.HTTPError(507,reason="Insufficient Storage")
                 e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
                 raise e
