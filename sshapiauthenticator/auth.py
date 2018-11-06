@@ -45,6 +45,8 @@ class SSHAPIAuthenticator(Authenticator):
         remote_host = 'cori19.nersc.gov'
         async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
             result = await conn.run("myquota -c")
+            self.log.debug("STD ERR: %s" % result.stderr)
+            self.log.debug("EXIT CODE: %s" % result.exit_status)
             return result.exit_status
 
     @gen.coroutine
