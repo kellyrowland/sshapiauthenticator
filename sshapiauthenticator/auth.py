@@ -81,7 +81,9 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            command = "ssh -o StrictHostKeyChecking=no {user}@cori01-224.nersc.gov 'myquota -c'".format(user=username)
+            command =  "ssh -o StrictHostKeyChecking=no -o preferredauthentications=publickey"
+            command += " -i " + file
+            command += " {user}@cori19.nersc.gov 'myquota -c'".format(user=username)
             command = shlex.split(command)
             result = call(command)
             if result:
