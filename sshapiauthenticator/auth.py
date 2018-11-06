@@ -81,5 +81,5 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            check_quota(username, pwd)
+            self.check_quota(username, pwd)
             return username
