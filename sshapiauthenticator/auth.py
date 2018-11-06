@@ -41,6 +41,7 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
+    @gen.coroutine
     async def check_quota(self, username):
         remote_host = 'cori19.nersc.gov'
         async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
