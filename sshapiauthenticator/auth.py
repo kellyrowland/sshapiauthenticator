@@ -41,9 +41,9 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
-    async def check_quota(self, username, pwd):
+    async def check_quota(self, username):
         remote_host = 'cori19.nersc.gov'
-        async with asyncssh.connect(remote_host,username=username,password=pwd,known_hosts=None) as conn:
+        async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
             result = await conn.run("myquota -c")
             if result.exit_status:
                 e = web.HTTPError(507)
@@ -81,5 +81,5 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            self.check_quota(username, ''.join(pwd))
+            self.check_quota(username)
             return username
