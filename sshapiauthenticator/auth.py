@@ -81,7 +81,7 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            command = "ssh {user}@cori.nersc.gov 'myquota -c'".format(user=username)
+            command = "ssh {user}@cori19 'myquota -c'".format(user=username)
             command = shlex.split(command)
             result = call(command)
             if result:
