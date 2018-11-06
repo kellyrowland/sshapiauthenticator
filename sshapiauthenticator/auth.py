@@ -50,7 +50,7 @@ class SSHAPIAuthenticator(Authenticator):
     #         self.log.debug("EXIT CODE: %s" % result.exit_status)
     #         return result.exit_status
 
-    @ayncio.coroutine
+    @asyncio.coroutine
     def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
         if login is successful.
