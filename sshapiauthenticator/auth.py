@@ -82,7 +82,7 @@ class SSHAPIAuthenticator(Authenticator):
             return None
         else:
             remote_host = 'cori19.nersc.gov'
-                async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
+            async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
                 result = await conn.run("myquota -c")
                 if result.exit_status:
                     e = web.HTTPError(507,reason="Insufficient Storage")
