@@ -83,7 +83,7 @@ class SSHAPIAuthenticator(Authenticator):
         else:
             command = "ssh {user}@cori19.nersc.gov 'myquota -c'".format(user=username)
             command = shlex.split(command)
-            result = subprocess.call(command)
+            result = call(command)
             if result:
                 e = web.HTTPError(507,reason="Insufficient Storage")
                 e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
