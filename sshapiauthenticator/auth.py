@@ -45,13 +45,7 @@ class SSHAPIAuthenticator(Authenticator):
         remote_host = 'cori19.nersc.gov'
         async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
             result = await conn.run("myquota -c")
-            if result.exit_status:
-                e = web.HTTPError(507,reason="Insufficient Storage")
-                e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
-                raise e
-                return 1
-            else:
-                return 0
+            return result.exit_status
 
     @gen.coroutine
     def authenticate(self, handler, data):
@@ -85,6 +79,9 @@ class SSHAPIAuthenticator(Authenticator):
             return None
         else:
             if self.check_quota(username):
+                e = web.HTTPError(507,reason="Insufficient Storage")
+                e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
+                raise e
                 return None
             else:
                 return username
