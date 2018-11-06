@@ -41,17 +41,17 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
-    @gen.coroutine
-    async def check_quota(self, username):
-        remote_host = 'cori19.nersc.gov'
-        async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
-            result = await conn.run("myquota -c")
-            self.log.debug("STD ERR: %s" % result.stderr)
-            self.log.debug("EXIT CODE: %s" % result.exit_status)
-            return result.exit_status
+    # @gen.coroutine
+    # async def check_quota(self, username):
+    #     remote_host = 'cori19.nersc.gov'
+    #     async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
+    #         result = await conn.run("myquota -c")
+    #         self.log.debug("STD ERR: %s" % result.stderr)
+    #         self.log.debug("EXIT CODE: %s" % result.exit_status)
+    #         return result.exit_status
 
-    @gen.coroutine
-    def authenticate(self, handler, data):
+#    @gen.coroutine
+    async def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
         if login is successful.
 
@@ -81,10 +81,13 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            if self.check_quota(username):
-                e = web.HTTPError(507,reason="Insufficient Storage")
-                e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
-                raise e
-                return None
-            else:
-                return username
+            remote_host = 'cori19.nersc.gov'
+                async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
+                result = await conn.run("myquota -c")
+                if result.exit_status:
+                    e = web.HTTPError(507,reason="Insufficient Storage")
+                    e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
+                    raise e
+                    return None
+                else:
+                    return username
