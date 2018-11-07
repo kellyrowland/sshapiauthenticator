@@ -41,15 +41,6 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
-    # @gen.coroutine
-    # async def check_quota(self, username):
-    #     remote_host = 'cori19.nersc.gov'
-    #     async with asyncssh.connect(remote_host,username=username,known_hosts=None) as conn:
-    #         result = await conn.run("myquota -c")
-    #         self.log.debug("STD ERR: %s" % result.stderr)
-    #         self.log.debug("EXIT CODE: %s" % result.exit_status)
-    #         return result.exit_status
-
     @gen.coroutine
     def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
