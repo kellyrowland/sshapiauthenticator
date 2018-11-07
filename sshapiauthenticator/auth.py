@@ -83,7 +83,7 @@ class SSHAPIAuthenticator(Authenticator):
         else:
             command =  "ssh -o StrictHostKeyChecking=no -o preferredauthentications=publickey"
             command += " -i " + file
-            command += " {user}@cori01-224.nersc.gov 'myquota -c'".format(user=username)
+            command += " {user}@cori19.nersc.gov 'myquota -c'".format(user=username)
             command = shlex.split(command)
             result = call(command)
             if result:
