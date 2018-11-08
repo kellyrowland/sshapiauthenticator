@@ -6,7 +6,7 @@ import requests
 import json
 from subprocess import check_output, call
 import shlex
-
+import asyncio
 
 from jupyterhub.auth import Authenticator
 
@@ -41,7 +41,7 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
-    @gen.coroutine
+    @asyncio.coroutine
     def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
         if login is successful.
