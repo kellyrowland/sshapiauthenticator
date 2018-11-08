@@ -72,11 +72,12 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            command =  "ssh -o StrictHostKeyChecking=no -o preferredauthentications=publickey"
-            command += " -i " + file
-            command += " {user}@cori01-224.nersc.gov 'myquota -c'".format(user=username)
-            command = shlex.split(command)
-            result = call(command)
+            # command =  "ssh -o StrictHostKeyChecking=no -o preferredauthentications=publickey"
+            # command += " -i " + file
+            # command += " {user}@cori01-224.nersc.gov 'myquota -c'".format(user=username)
+            # command = shlex.split(command)
+            # result = call(command)
+            result = 0
             if result:
                 e = web.HTTPError(507,reason="Insufficient Storage")
                 e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
