@@ -1,11 +1,9 @@
 import os
 
 from traitlets import Unicode, Integer
-from tornado import gen, web
 import requests
 import json
-from subprocess import check_output, call
-import shlex
+from subprocess import check_output
 import asyncio
 
 from jupyterhub.auth import Authenticator
@@ -41,7 +39,8 @@ class SSHAPIAuthenticator(Authenticator):
             with open(file+'-cert.pub', 'w') as f:
                 f.write(line)
 
-    async def authenticate(self, handler, data):
+    @asyncio.coroutine
+    def authenticate(self, handler, data):
         """Authenticate with SSH Auth API, and return the privatre key
         if login is successful.
 
@@ -71,16 +70,4 @@ class SSHAPIAuthenticator(Authenticator):
                 self.log.warning("SSH Auth API Authentication failed: ")
             return None
         else:
-            # command =  "ssh -o StrictHostKeyChecking=no -o preferredauthentications=publickey"
-            # command += " -i " + file
-            # command += " {user}@cori01-224.nersc.gov 'myquota -c'".format(user=username)
-            # command = shlex.split(command)
-            # result = call(command)
-            result = 0
-            if result:
-                e = web.HTTPError(507,reason="Insufficient Storage")
-                e.my_message = "There is insufficient space in your home directory; please clear up some files and try again."
-                raise e
-                return None
-            else:
-                return username
+            return username
